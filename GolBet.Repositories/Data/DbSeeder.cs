@@ -138,5 +138,21 @@ public static class DbSeeder
             await userManager.CreateAsync(admin, "Admin123*");
             await userManager.AddToRoleAsync(admin, AdminRole);
         }
+
+        // Bet User (Apostador) --- Para chequear el sistema de apuestas, y menu solo para el apostador
+        if (await userManager.FindByEmailAsync("gambler@golbet.com") is null)
+        {
+            var gambler = new AppUser
+            {
+                UserName = "gambler@golbet.com",
+                Email = "gambler@golbet.com",
+                FullName = "Apostador GolBet",
+                Balance = 1000000m,
+                EmailConfirmed = true
+            };
+
+            await userManager.CreateAsync(gambler, "VivaLaPlata2026*");
+            await userManager.AddToRoleAsync(gambler, BettorRole);
+        }
     }
 }

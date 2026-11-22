@@ -12,6 +12,8 @@
     </a>
     @if (User.IsInRole("Admin"))
     {
-        <a asp-action="Create" class="btn btn-success">+ Nuevo partido</a>
+        <a asp-controller="Matches" asp-action="Create" class="btn btn-success">+ Nuevo partido</a>
     }
+    <!-- Para debugear-->
+    <!-- <button onclick="console.log(@(User.IsInRole("Apostador") ? "true" : "false"))">En consola: Soy apostador?</button> -->
 </div>

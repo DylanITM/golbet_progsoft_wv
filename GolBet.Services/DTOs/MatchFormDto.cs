@@ -19,14 +19,14 @@ public class MatchFormDto
     public DateTime Date { get; set; } = DateTime.Today.AddDays(7).AddHours(19);
 
     [Display(Name = "Cuota local (1)")]
-    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00")]
+    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00 y menor que 1000")]
     public decimal HomeOdds { get; set; } = 2.00m;
 
     [Display(Name = "Cuota empate (X)")]
-    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00")]
+    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00 y menor que 1000")]
     public decimal DrawOdds { get; set; } = 3.00m;
 
     [Display(Name = "Cuota visitante (2)")]
-    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00")]
+    [Range(1.01, 999.99, ErrorMessage = "La cuota debe ser mayor que 1.00 y menor que 1000")]
     public decimal AwayOdds { get; set; } = 3.50m;
 }

@@ -65,22 +65,49 @@ public class MatchesController : Controller
         catch (InvalidOperationException ex)      // business rule violated
         {
             ModelState.AddModelError(string.Empty, ex.Message);
+            if (dto is null) return NotFound();
+
             await LoadTeamsAsync();
             return View(dto);
         }
     }
 
-    // GET /Matches/Edit/5  y  POST /Matches/Edit  siguen el mismo molde
+    // GET /Matches/Edit/5 
     // (con GetForEditAsync y UpdateAsync);
-    // GET /Teams/Edit/5
     [Authorize(Roles = DbSeeder.AdminRole)]
     public async Task<IActionResult> Edit(int id)
     {
         var dto = await _matchService.GetForEditAsync(id);
         if (dto is null) return NotFound();
+
+        await LoadTeamsAsync();
         return View(dto);
     }
 
+    // POST /Matches/Edit/5
+    [Authorize(Roles = DbSeeder.AdminRole)]
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(MatchFormDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            await LoadTeamsAsync();
+            return View(dto);
+        }
+
+        try
+        {
+            await _matchService.UpdateAsync(dto);
+            TempData["Success"] = "Partido actualizado.";
+            return RedirectToAction(nameof(Index));
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            await LoadTeamsAsync();
+            return View(dto);
+        }
+    }
 
     // POST /Matches/Deactivate/5 es idéntico al de Teams.
     // POST /Teams/Deactivate/5
