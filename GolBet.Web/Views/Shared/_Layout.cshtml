@@ -34,7 +34,12 @@
                                 <a class="nav-link" asp-controller="Teams" asp-action="Index">Equipos</a>
                             </li>
                         }
-
+                        @if (User.IsInRole("Apostador"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Bets" asp-action="MyBets">Mis apuestas</a>
+                            </li>
+                        }
                     </ul>
                     <!-- Aquí irá el enlace a Partidos (Módulo 3) y la sesión (Módulo 7) -->
                     <div class="collapse navbar-collapse" id="navbarMain">
@@ -51,6 +56,13 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["Error"] is string errorMessage)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    ⚠️ @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
             @RenderBody()
             @if (TempData["Success"] is string message)
             {
