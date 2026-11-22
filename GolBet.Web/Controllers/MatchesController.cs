@@ -4,6 +4,8 @@ using GolBet.Services.DTOs;
 using GolBet.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using GolBet.Repositories.Data;
 
 namespace GolBet.Web.Controllers;
 
@@ -37,6 +39,7 @@ public class MatchesController : Controller
     }
 
     // GET /Matches/Create
+    [Authorize(Roles = DbSeeder.AdminRole)]
     public async Task<IActionResult> Create()
     {
         await LoadTeamsAsync();
@@ -44,6 +47,7 @@ public class MatchesController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = DbSeeder.AdminRole)]
     public async Task<IActionResult> Create(MatchFormDto dto)
     {
         if (!ModelState.IsValid)
@@ -68,7 +72,26 @@ public class MatchesController : Controller
 
     // GET /Matches/Edit/5  y  POST /Matches/Edit  siguen el mismo molde
     // (con GetForEditAsync y UpdateAsync);
+    // GET /Teams/Edit/5
+    [Authorize(Roles = DbSeeder.AdminRole)]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var dto = await _matchService.GetForEditAsync(id);
+        if (dto is null) return NotFound();
+        return View(dto);
+    }
+
+
     // POST /Matches/Deactivate/5 es idéntico al de Teams.
+    // POST /Teams/Deactivate/5
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = DbSeeder.AdminRole)]
+    public async Task<IActionResult> Deactivate(int id)
+    {
+        await _matchService.DeactivateAsync(id);
+        TempData["Success"] = "Partido desactivado.";
+        return RedirectToAction(nameof(Index));
+    }
 
     private async Task LoadTeamsAsync()
     {

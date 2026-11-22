@@ -10,6 +10,8 @@
     <a class="btn btn-success btn-lg" asp-controller="Matches" asp-action="Index">
         Ver partidos
     </a>
-
-
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Nuevo partido</a>
+    }
 </div>
